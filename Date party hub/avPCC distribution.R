@@ -1,4 +1,4 @@
-# TODO: Add comment
+# Now you are in the beta branch
 # 
 # Author: tao.xu
 ###############################################################################
