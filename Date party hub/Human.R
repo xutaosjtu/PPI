@@ -3,6 +3,57 @@
 # Author: tao.xu
 ###############################################################################
 
+#################### APCC 
+#all tissues
+subset = colnames(data)
+#brain tissues
+subset = scan(what = character())
+Cerebellum
+CerebellumPeduncles
+CingulateCortex
+Fetalbrain
+GlobusPallidus
+Hypothalamus
+MedullaOblongata
+OccipitalLobe
+OlfactoryBulb
+ParietalLobe
+Pituitary
+Pons
+PrefrontalCortex
+SubthalamicNucleus
+Thalamus
+Wholebrain
+pineal_day
+pineal_night
+
+
+tissue.data = data[, subset ]
+APCC=NULL;
+for(j in 1:dim(tissue.data)[1]){
+	rtmp=NULL;
+	I=which(n1[j,]==1)
+	if(length(I)!=0){
+		for(i in 1:length(I)){
+			rtmp[i]=cor(tissue.data[I[i],],tissue.data[j,])
+		}
+		APCC[j]=sum(rtmp,na.rm=T)/(length(I))
+	}
+	else{
+		APCC[j]=0
+	}
+}
+names(APCC) = rownames(tissue.data)
+APCC = APCC[as.character(HumanData[,1])]
+
+EVV = NULL;
+EVV = apply(tissue.data, 1, var, na.rm = T)
+EVV[which(is.na(EVV))] = 0
+EVV = rank(EVV)/max(rank(EVV))
+names(EVV) = rownames(tissue.data)
+EVV = EVV[as.character(HumanData[,1])]
+HumanData$evv = EVV
+####################
 setwd("F:/Xiao")
 files = dir("new result/Modules", pattern = "*.csv", full.names = T)
 
@@ -12,7 +63,9 @@ for(f in files){
 	fullgenes = rbind(fullgenes , genes)
 }
 
-pdf("Human apcc.pdf")
+HumanData = HumanData[order(HumanData$apcc, decreasing = T),]
+
+pdf("Human apcc 2.pdf")
 plot(HumanData$participation.cofficient,HumanData$within.module.degree, type="n", xlab="Participation coefficient", ylab="Within-community degree", ylim=c(-4,19),xlim=c(0,1),xaxt="n", yaxt="n",bty = "n", main = "Human")
 rect(0,-4,0.05,2.5,col = "grey80",border=NA)
 rect(0.05,-4,0.62,2.5,col = rgb(255, 225, 225,maxColorValue = 255),border=NA)
@@ -68,3 +121,6 @@ for (i in 1:dim(HumanData)[1]){
 
 image.plot( zlim=c(-1,1), col = tim.colors(200)[1: 200], legend.only=TRUE, smallplot = c(.93,.97,0.22,0.82))
 dev.off()
+
+
+################
