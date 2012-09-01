@@ -123,4 +123,17 @@ image.plot( zlim=c(-1,1), col = tim.colors(200)[1: 200], legend.only=TRUE, small
 dev.off()
 
 
-################
+################ apcc in each module
+pdf("human_apcc_modules_adj0.5.pdf",width=20,height=28)
+split.screen(c(6,4))
+for(i in 1:21){
+	screen(i)
+	plot(density(HumanData[which(HumanData$module==i),"apcc"],adjust=0.5, na.rm = T),main=paste("module_",i),xlim=c(-1,1))
+}
+dev.off()
+
+for(i in 1:35){
+	write.csv(tmp[which(tmp[,"module"]==i),],paste(i,"module.csv",sep="_"),row.names=FALSE)
+}
+
+
