@@ -32,10 +32,10 @@ tissue.data = data[, subset ]
 APCC=NULL;
 for(j in 1:dim(tissue.data)[1]){
 	rtmp=NULL;
-	I=which(n1[j,]==1)
+	I=which(n1[j,]!=0)
 	if(length(I)!=0){
 		for(i in 1:length(I)){
-			rtmp[i]=cor(tissue.data[I[i],],tissue.data[j,])
+			rtmp[i]=cor(tissue.data[I[i],],tissue.data[j,], use = "pairwise.complete.obs")
 		}
 		APCC[j]=sum(rtmp,na.rm=T)/(length(I))
 	}
@@ -64,6 +64,8 @@ for(f in files){
 }
 
 HumanData = HumanData[order(HumanData$apcc, decreasing = T),]
+# 
+
 
 pdf("Human apcc 2.pdf")
 plot(HumanData$participation.cofficient,HumanData$within.module.degree, type="n", xlab="Participation coefficient", ylab="Within-community degree", ylim=c(-4,19),xlim=c(0,1),xaxt="n", yaxt="n",bty = "n", main = "Human")
@@ -124,11 +126,11 @@ dev.off()
 
 
 ################ apcc in each module
-pdf("human_apcc_modules_adj0.5.pdf",width=20,height=28)
+pdf("human_tumor apcc_modules_adj1.pdf",width=20,height=28)
 split.screen(c(6,4))
 for(i in 1:21){
 	screen(i)
-	plot(density(HumanData[which(HumanData$module==i),"apcc"],adjust=0.5, na.rm = T),main=paste("module_",i),xlim=c(-1,1))
+	plot(density(HumanData[which(HumanData$module==i),"apcc"],adjust=1, na.rm = T),main=paste("module_",i),xlim=c(-1,1))
 }
 dev.off()
 
