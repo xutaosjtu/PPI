@@ -83,3 +83,16 @@ tapply(HCup.att$degree, INDEX = HCup.att$role, function(x) length(x)/3801)
 tmp=apply(HJD.att[,2:3], 1, roles)
 HJD.att$role = tmp
 tapply(HJD.att[,1], INDEX = HJD.att$role, function(x) length(x)/2233)
+
+annotation = read.csv("GO annotation.sgd.csv", header=F,stringsAsFactors=FALSE)
+annotation = read.csv("dbxref.tab", header =F, sep = "\t")
+
+tmp = sapply(annotation[,11], function(x) unlist(strsplit(x, fixed=T, split="|"))[1])
+
+annotation[,11] = tmp
+
+HJD.att$locus = rownames(HJD.att)
+tmp = merge(HJD.att, annotation, by.x = "locus", by.y="V11", all.x = T, all.y = F, sort = F)
+
+HCup.att$locus = rownames(HCup.att)
+tmp = merge(HCup.att, annotation, by.x = "locus", by.y="V11", all.x = T, all.y = F, sort = F)
